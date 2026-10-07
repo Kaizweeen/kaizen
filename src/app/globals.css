@@ -1,0 +1,462 @@
+@import "tailwindcss";
+
+/*
+ * Two inks on paper. Sumi (ink) carries the type, shu (seal vermilion) is the second
+ * plate: it marks the seal, live states, and the misregistration that settles as the
+ * page refines itself. Shu never sits behind small paper-coloured text (3.5:1); text on
+ * a shu field is always ink (4.7:1 and up).
+ */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-line: var(--line);
+  --color-shu: var(--shu);
+  --color-on-shu: var(--on-shu);
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-jp: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --breakpoint-xs: 30rem;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #f1f0ec;
+  --bg-2: #e5e4de;
+  --fg: #121316;
+  --fg-2: #4a4c52;
+  --fg-3: #9a9ca1;
+  --line: rgb(18 19 22 / 0.16);
+  --shu: #e8462a;
+  --on-shu: #121316;
+  --knock: #f6f4ee;
+  --grain-blend: multiply;
+  --grain-alpha: 0.5;
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="paper"]) {
+    color-scheme: dark;
+    --bg: #0f1012;
+    --bg-2: #191a1d;
+    --fg: #ecebe6;
+    --fg-2: #a9aaaf;
+    --fg-3: #5c5e63;
+    --line: rgb(236 235 230 / 0.16);
+    --shu: #f0532f;
+    --grain-blend: screen;
+    --grain-alpha: 0.32;
+  }
+}
+
+:root[data-theme="sumi"] {
+  color-scheme: dark;
+  --bg: #0f1012;
+  --bg-2: #191a1d;
+  --fg: #ecebe6;
+  --fg-2: #a9aaaf;
+  --fg-3: #5c5e63;
+  --line: rgb(236 235 230 / 0.16);
+  --shu: #f0532f;
+  --grain-blend: screen;
+  --grain-alpha: 0.32;
+}
+
+/* Registration: 1 = the vermilion plate sits off register, 0 = printed true. */
+@property --reg {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  scrollbar-color: var(--fg) var(--bg);
+  scrollbar-width: thin;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.5s var(--ease-expo),
+    color 0.5s var(--ease-expo);
+}
+
+::selection {
+  background: var(--shu);
+  color: var(--on-shu);
+}
+
+input,
+textarea {
+  caret-color: var(--shu);
+}
+
+:focus-visible {
+  outline: 2px solid var(--shu);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+a {
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+/* ---------- Type ---------- */
+
+.display {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  letter-spacing: -0.025em;
+  line-height: 0.92;
+  /* The style longhand, so a nowrap utility can still switch wrapping off. */
+  text-wrap-style: balance;
+}
+
+.wide {
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+}
+
+.jp {
+  font-family: var(--font-jp);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+.nums {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* The second plate. Animate --reg from 1 to 0 to bring an element into register. */
+.reg {
+  text-shadow: calc(var(--reg) * 0.09em) calc(var(--reg) * -0.06em) 0
+    color-mix(in srgb, var(--shu) calc(var(--reg) * 100%), transparent);
+}
+
+.reg-img {
+  filter: drop-shadow(
+    calc(var(--reg) * 14px) calc(var(--reg) * -10px) 0
+      color-mix(in srgb, var(--shu) calc(var(--reg) * 100%), transparent)
+  );
+}
+
+/* ---------- Grain ---------- */
+
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--grain-alpha);
+  mix-blend-mode: var(--grain-blend);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.9s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-1%, 3%); }
+  80% { transform: translate(4%, 1%); }
+  100% { transform: translate(-2%, -2%); }
+}
+
+/* ---------- Intro ---------- */
+
+.intro {
+  display: none;
+}
+
+html[data-intro="play"] .intro {
+  display: grid;
+  /* If the script never arrives, the curtain still lifts. */
+  animation: intro-failsafe 0s linear 6s forwards;
+}
+
+html[data-intro="play"] [data-seal-target] {
+  opacity: 0;
+}
+
+@keyframes intro-failsafe {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* ---------- Cursor ---------- */
+
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+/* ---------- Controls ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  min-height: 3rem;
+  padding: 0 1.35rem;
+  font-size: 0.78rem;
+  font-weight: 750;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 0.35s var(--ease-expo),
+    color 0.35s var(--ease-expo),
+    box-shadow 0.35s var(--ease-expo);
+}
+.btn-ink {
+  background: var(--fg);
+  color: var(--bg);
+}
+.btn-ink:hover {
+  background: var(--shu);
+  color: var(--on-shu);
+}
+.btn-line {
+  box-shadow: inset 0 0 0 2px var(--fg);
+}
+.btn-line:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+.btn-onshu {
+  background: var(--on-shu);
+  color: var(--knock);
+}
+.btn-onshu:hover {
+  background: var(--knock);
+  color: var(--on-shu);
+}
+.btn-onshu-line {
+  box-shadow: inset 0 0 0 2px var(--on-shu);
+}
+.btn-onshu-line:hover {
+  background: var(--on-shu);
+  color: var(--knock);
+}
+
+.nav-link {
+  position: relative;
+  padding-block: 0.4rem;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2px;
+  background: var(--shu);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-expo);
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.theme-toggle [data-glyph] {
+  opacity: 0.35;
+  transition: opacity 0.3s;
+}
+.theme-toggle[data-theme-now="paper"] [data-glyph="paper"],
+.theme-toggle[data-theme-now="sumi"] [data-glyph="sumi"] {
+  opacity: 1;
+}
+
+/* Fixed chrome switches ink when it sits over the ink block or the vermilion field. */
+html[data-surface-top="ink"] .hdr {
+  color: var(--bg);
+}
+html[data-surface-top="shu"] .hdr {
+  color: var(--on-shu);
+  --seal-plate: var(--on-shu);
+}
+
+/* The version tag is a small chip in the colour of whatever it sits on. */
+.vtag {
+  background: var(--bg);
+  box-shadow: 0 0 0 6px var(--bg);
+}
+html[data-surface-bottom="ink"] .vtag {
+  color: var(--bg);
+  background: var(--fg);
+  box-shadow: 0 0 0 6px var(--fg);
+}
+html[data-surface-bottom="shu"] .vtag {
+  color: var(--on-shu);
+  background: var(--shu);
+  box-shadow: 0 0 0 6px var(--shu);
+}
+
+.vtick {
+  opacity: 0.22;
+  transition:
+    opacity 0.3s,
+    transform 0.3s var(--ease-expo);
+  transform-origin: bottom;
+}
+.vtick[data-on] {
+  opacity: 1;
+}
+.vtag[data-released] .vtick {
+  transform: scaleY(1.5);
+}
+
+/* ---------- Sections ---------- */
+
+.method-arc {
+  stroke: var(--fg);
+  stroke-opacity: 0.16;
+  transition:
+    stroke 0.4s,
+    stroke-opacity 0.4s;
+}
+.method-arc[data-on] {
+  stroke: var(--shu);
+  stroke-opacity: 1;
+}
+/* The active step is marked, never the others dimmed: every step stays AA legible. */
+.method-step .step-n {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  transition:
+    background-color 0.4s var(--ease-expo),
+    color 0.4s var(--ease-expo);
+}
+.method-step[data-on] .step-n {
+  background: var(--shu);
+  color: var(--on-shu);
+}
+.method-step h3 > span:first-child {
+  background: linear-gradient(var(--shu), var(--shu)) no-repeat 0 100% / 0% 2px;
+  transition: background-size 0.6s var(--ease-expo);
+}
+.method-step[data-on] h3 > span:first-child {
+  background-size: 100% 2px;
+}
+
+.chart-label {
+  font-size: 15px;
+}
+@media (max-width: 40rem) {
+  .chart-label {
+    font-size: 30px;
+  }
+}
+
+.offer h3 {
+  transition: translate 0.6s var(--ease-expo);
+}
+.offer:hover h3 {
+  translate: 0.18em 0;
+  animation: register 0.7s var(--ease-expo);
+}
+@keyframes register {
+  from {
+    --reg: 1;
+  }
+  to {
+    --reg: 0;
+  }
+}
+
+.shot {
+  filter: grayscale(1) contrast(1.06);
+  transition:
+    filter 0.7s var(--ease-expo),
+    scale 1.2s var(--ease-expo);
+}
+.panel:hover .shot,
+.panel:focus-within .shot {
+  filter: none;
+  scale: 1.03;
+}
+.panel:hover [data-shot] {
+  animation: register 0.6s var(--ease-expo);
+}
+
+/* The photo is inked into the paper like the grain: multiply on paper, screen on sumi. */
+.portrait-src {
+  mix-blend-mode: var(--grain-blend);
+}
+
+/* ---------- Cursor colour ---------- */
+
+.cursor {
+  color: var(--shu);
+}
+.cursor[data-on="shu"] {
+  color: var(--on-shu);
+}
+
+/* ---------- Hero lines wait for the curtain ---------- */
+
+html[data-motion="on"] [data-rise] {
+  opacity: 0;
+  animation: reveal-failsafe 0s linear 5s forwards;
+}
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Motion off ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+  html[data-intro="play"] .intro {
+    display: none;
+  }
+  html[data-intro="play"] [data-seal-target] {
+    opacity: 1;
+  }
+  .offer:hover h3,
+  .panel:hover [data-shot] {
+    animation: none;
+  }
+}

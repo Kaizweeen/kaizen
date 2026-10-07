@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-07T23:45:00+08:00",
+  "title": "Design System: Kaizen",
+  "extensions": {
+    "colorMeta": {
+      "sumi-ink": { "role": "neutral", "displayName": "Sumi Ink", "canonical": "#121316", "tonalRamp": ["#121316", "#24262b", "#383a40", "#4a4c52", "#6b6d72", "#8f9095", "#b9babd", "#e2e2e4"] },
+      "kozo-paper": { "role": "neutral", "displayName": "Kozo Paper", "canonical": "#f1f0ec", "tonalRamp": ["#3d3c38", "#5f5e59", "#83817b", "#a7a59f", "#c6c4be", "#e5e4de", "#f1f0ec", "#f8f7f4"] },
+      "shu-vermilion": { "role": "primary", "displayName": "Shu Vermilion", "canonical": "#e8462a", "tonalRamp": ["#3b0f07", "#66190c", "#922511", "#bd3119", "#e8462a", "#ee6d56", "#f4a091", "#fad3cc"] },
+      "night-paper": { "role": "neutral", "displayName": "Night Paper", "canonical": "#0f1012", "tonalRamp": ["#0f1012", "#191a1d", "#26272b", "#3a3b40", "#5c5e63", "#85868b", "#a9aaaf", "#ecebe6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Section titles and the close. Always width 125." },
+      "statement": { "displayName": "Statement", "purpose": "The about paragraph that inks in word by word." },
+      "label": { "displayName": "Label", "purpose": "Buttons, navigation, links, the version number." },
+      "kanji": { "displayName": "Kanji", "purpose": "Vertical marks beside headings, the theme toggle, PDCA steps." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Every state transition and entrance." },
+      { "name": "registration", "value": "--reg 1 to 0 over 0.5 to 1.2s, expo out", "purpose": "The vermilion plate settling under sumi; the world's native motion." },
+      { "name": "scrub", "value": "ScrollTrigger scrub 0.5 to 0.8", "purpose": "Scroll-linked prints: statement, portrait, 1% year, Work track, Method ring." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px", "purpose": "Pinned horizontal Work track and pinned Method ring begin here when motion is allowed." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Primary action. Sumi block that turns vermilion on hover.",
+      "html": "<button class=\"ds-btn-ink\">See the work</button>",
+      "css": ".ds-btn-ink { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.35rem; background: var(--fg, #121316); color: var(--bg, #f1f0ec); border: 0; border-radius: 0; font: 750 0.78rem/1 Archivo, sans-serif; font-stretch: 125%; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: background-color .35s cubic-bezier(0.16,1,0.3,1), color .35s cubic-bezier(0.16,1,0.3,1); } .ds-btn-ink:hover { background: var(--shu, #e8462a); color: var(--on-shu, #121316); } .ds-btn-ink:focus-visible { outline: 2px solid var(--shu, #e8462a); outline-offset: 4px; }"
+    },
+    {
+      "name": "Line Button",
+      "kind": "button",
+      "refersTo": "button-line",
+      "description": "Secondary action. 2px sumi outline that fills on hover.",
+      "html": "<button class=\"ds-btn-line\">Say hello</button>",
+      "css": ".ds-btn-line { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.35rem; background: transparent; color: var(--fg, #121316); border: 0; border-radius: 0; box-shadow: inset 0 0 0 2px var(--fg, #121316); font: 750 0.78rem/1 Archivo, sans-serif; font-stretch: 125%; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; transition: background-color .35s cubic-bezier(0.16,1,0.3,1), color .35s cubic-bezier(0.16,1,0.3,1); } .ds-btn-line:hover { background: var(--fg, #121316); color: var(--bg, #f1f0ec); } .ds-btn-line:focus-visible { outline: 2px solid var(--shu, #e8462a); outline-offset: 4px; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Header link with a vermilion underline that draws in from the left.",
+      "html": "<a class=\"ds-nav-link\" href=\"#work\">Work</a>",
+      "css": ".ds-nav-link { position: relative; padding: 0.4rem 0; color: var(--fg, #121316); text-decoration: none; font: 700 0.72rem/1 Archivo, sans-serif; font-stretch: 125%; letter-spacing: 0.08em; text-transform: uppercase; } .ds-nav-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--shu, #e8462a); transform: scaleX(0); transform-origin: right; transition: transform .5s cubic-bezier(0.16,1,0.3,1); } .ds-nav-link:hover::after, .ds-nav-link:focus-visible::after { transform: scaleX(1); transform-origin: left; }"
+    },
+    {
+      "name": "Status Marker",
+      "kind": "chip",
+      "refersTo": "status",
+      "description": "Square marker plus label on project panels; vermilion when in progress.",
+      "html": "<span class=\"ds-status\"><span class=\"ds-status-dot\"></span>In progress</span>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 0.5rem; font: 600 0.875rem/1.3 Archivo, sans-serif; color: var(--fg, #121316); } .ds-status-dot { width: 0.5rem; height: 0.5rem; background: var(--shu, #e8462a); }"
+    },
+    {
+      "name": "Commit Bar",
+      "kind": "custom",
+      "refersTo": "commit-bar",
+      "description": "A count drawn to one shared scale across every project.",
+      "html": "<span class=\"ds-bar\"><span class=\"ds-bar-n\">71</span><span class=\"ds-bar-track\"><span class=\"ds-bar-fill\" style=\"width:22%\"></span></span></span>",
+      "css": ".ds-bar { display: flex; align-items: center; gap: 0.75rem; width: 16rem; font: 600 0.875rem/1 Archivo, sans-serif; font-variant-numeric: tabular-nums; color: var(--fg, #121316); } .ds-bar-track { position: relative; flex: 1; height: 3px; background: rgb(18 19 22 / 0.16); } .ds-bar-fill { position: absolute; inset: 0 auto 0 0; background: var(--fg, #121316); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Print Run That Improves Itself",
+    "overview": "The site is a two-ink print run on grey kozo paper. Sumi ink carries every word and image; a single vermilion plate, the colour of a hanko seal, is the second ink. Everything arrives the way a first proof does, slightly off register, and settles true as the reader moves through it. That motion is the name made literal: 改善, change for the better in small steps. The page starts at v0.1 and is released at v1.0 when the reader reaches the end.\n\nThe world is Japanese print and seal culture read through modernist poster design, not the cream-and-serif editorial default. Type is wide and heavy, set like poster lettering; kanji stand vertically in the margins. Surfaces are flat paper with drawn grain. There are no cards, no shadows, no gradients, no glass, and no rounded corners except the rough edge of the seal.",
+    "keyCharacteristics": [
+      "Two inks only: sumi and shu, on paper.",
+      "Misregistration is the motion grammar; every entrance ends in register.",
+      "Wide, heavy Archivo for display; Zen Kaku Gothic for kanji, set vertically.",
+      "Numbers are drawn to exact scale.",
+      "Vermilion floods a whole frame only at the seal moments."
+    ],
+    "rules": [
+      { "name": "The Two Plates Rule", "body": "Only sumi and shu are ever printed. A third hue is a defect; tints are made by halftone, not by new colours.", "section": "colors" },
+      { "name": "The Ink On Vermilion Rule", "body": "Text on a vermilion field is always sumi (4.7:1 and up). Paper-coloured text on vermilion is 3.5:1 and is never used below display size.", "section": "colors" },
+      { "name": "The Two Floods Rule", "body": "Vermilion owns a whole frame only at the seal: the intro stamp and the Contact close. Everywhere else it is a spot colour.", "section": "colors" },
+      { "name": "The Stretch Rule", "body": "Display is always width 125. A heading at normal width reads as body that got loud.", "section": "typography" },
+      { "name": "The Tabular Rule", "body": "Every number (version, counters, chart axes, commit counts) uses tabular lining figures so it does not jitter while it counts.", "section": "typography" },
+      { "name": "The No Lift Rule", "body": "Nothing floats. Hover changes ink (fill, colour, registration), never elevation.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do end every animation in register (`--reg: 0`). Misregistration is a moment, never a resting state.",
+      "Do draw numbers to scale: shared bar scales, curves plotted from their real function.",
+      "Do mark the active item (vermilion square, 2px underline) instead of dimming the others.",
+      "Do give reduced motion a finished page: final states shown, nothing pinned, every project reachable.",
+      "Do set kanji vertically beside a heading, never above it as a label."
+    ],
+    "donts": [
+      "Don't print a third hue, a gradient, a shadow, or a rounded corner outside the seal.",
+      "Don't put paper-coloured text on vermilion below display size.",
+      "Don't flood a frame with vermilion outside the seal moments.",
+      "Don't dim resting text below 4.5:1 to show state.",
+      "Don't use a red disc on a white field; the flood grows as the seal's rectangular plate."
+    ]
+  }
+}
